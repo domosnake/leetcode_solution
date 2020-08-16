@@ -45,8 +45,7 @@ class Solution:
             res.append(self.dfs(graph, start, end, 1, visited))
         return res
 
-    def dfs(self, graph: dict, start: str, end: str, cost: float,
-            visited: set) -> float:
+    def dfs(self, graph: dict, start: str, end: str, cost: float, visited: set) -> float:
         # vertex not in graph
         if start not in graph or end not in graph:
             return -1.0
