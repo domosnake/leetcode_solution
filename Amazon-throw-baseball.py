@@ -18,20 +18,24 @@ class Solution:
         stack = [0] * 2 * len(score)
         for s in score:
             if s == '+':
-                last = stack.pop()
-                prevLast = stack.pop()
+                last = stack[-1]
+                prevLast = stack[-2]
                 stack.append(last + prevLast)
             elif s == 'Z':
                 stack.pop()
             elif s == 'X':
-                last = stack.pop()
+                last = stack[-1]
                 stack.append(last * 2)
             else:
-                stack.append(int(s))
+                # check if the scors can be converted to int
+                try:
+                    stack.append(int(s))
+                except ValueError:
+                    continue
         return sum(stack)
 
 
 s = Solution()
-score = ["5", "-2", "4", "Z", "X", "9", "+", "+"];
+score = ["Z", "Z", "Z", "Z", "+", "+", "X", "-"]
 a = s.calculateBaseballScore(score)
 print(a)
