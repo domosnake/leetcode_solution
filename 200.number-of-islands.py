@@ -17,7 +17,7 @@ class Solution:
                 if grid[row][col] == '1':
                     # means we find an island
                     islands += 1
-                    # search the if surrounding  cells are connected to this cell
+                    # search the if surrounding cells are connected to this cell
                     self.dfs(row, col, grid)
         return islands
 
@@ -25,7 +25,7 @@ class Solution:
         # beyond boundary
         if r >= len(matrix) or c >= len(matrix[0]) or r < 0 or c < 0:
             return
-        # dfs to a visited cell， or water
+        # dfs to a visited cell, or water
         if matrix[r][c] == '$' or matrix[r][c] == '0':
             return
         # mark visited
