@@ -4,7 +4,6 @@
 # [126] Word Ladder II
 #
 from typing import List
-from heapq import heappush, heappop
 
 
 # @lc code=start
@@ -14,7 +13,7 @@ class Solution:
         if endWord not in words:
             return []
 
-        # bi-directed graph of all words
+        # build graph, bi-directed unweighted graph of all words
         graph = {}
         words.add(beginWord)
         for a in words:
@@ -25,44 +24,74 @@ class Solution:
                     adjacency.add(b)
             graph[a] = adjacency
 
-        # dfs all path(s) from begin to end
+        # we keep storing the predecessor of a given node while doing bfs
+        connectTo = {}
+        distanceFromBegin = {}
+        visited = {}
+        for w in words:
+            connectTo[w] = None
+            distanceFromBegin[w] = float('inf')
+            visited[w] = False
+        distanceFromBegin[beginWord] = 0
+
+        # bfs
+        self.bfs(graph, beginWord, endWord, connectTo, distanceFromBegin, visited)
+
+        # now all our paths can be extracted from connectTo via dfs
         paths = []
-        path = [beginWord]
-        visited = set()
-        self.dfs(graph, paths, path, visited, endWord)
-        if not paths:
-            return []
-
-        # pop shortest paths from heap
-        shortest = paths[0][0]
-        shortestPaths = []
-        while paths:
-            p = heappop(paths)
-            if p[0] > shortest:
-                break
-            shortestPaths.append(p[1])
-
-        return shortestPaths
-
-    def dfs(self, graph: {}, paths: [], path: [], visited: set, endWord: str):
+        path = []
+        self.dfs(beginWord, endWord, connectTo, path, paths)
+        
+        return paths
+    
+    def dfs(self, beginWord: str, endWord: str, connectTo: {str: str}, path: List[str], paths: List[List[str]]):
         # base
-        if path[-1] == endWord:
-            # save copied path, len is the key
-            heappush(paths, (len(path), path[:]))
+        if connectTo[beginWord] == endWord: 
+            paths.append(path)
             return
+    
+        # for each connected words 
+        for  
+    
+            // Insert the current 
+            // vertex in path 
+            path.push_back(u); 
+    
+            // Recursive call for its parent 
+            find_paths(paths, path, parent, 
+                    n, par); 
+    
+            // Remove the current vertex 
+        path.pop_back(); 
 
-        # mark visited
-        visited.add(path[-1])
-        # keep dfs for each adjacent word
-        for word in graph[path[-1]]:
-            if word in visited:
+
+    def bfs(self, graph: {str: set}, beginWord: str, endWord: str, connectTo: {str: str}, distanceFromBegin: {str: int}, visited: {str: bool}):
+
+        # queue for bfs
+        q = [beginWord]
+
+        # bfs
+        while q:
+            cur = q.pop(0)
+            # mark visited
+            visited[cur] = True
+            # when endWord reached
+            if cur == endWord:
+                # to find all shortest paths, reset endWords visit flag
+                visited[cur] = False
                 continue
-            path.append(word)
-            # keep searching next word
-            self.dfs(graph, paths, path, visited, endWord)
-            # backtrack and unmark visited
-            path.pop()
-            visited.discard(word)
+            # no need to explore longer path
+            if distanceFromBegin[cur] >= distanceFromBegin[endWord]:
+                # block the way by NOT adding it's adj
+                continue
+            # explore to adjacent words
+            for adj in graph[cur]:
+                # update distance
+                distanceFromBegin[adj] = distanceFromBegin[cur] + 1
+                # update connectTo, cur -> adj
+                connectTo[cur] = adj
+                # add adj to queue
+                q.append(adj)
 
     def diff(self, a: str, b: str) -> int:
         if len(a) != len(b):
@@ -74,10 +103,10 @@ class Solution:
         return diff
 
 
-# s = Solution()
-# beginWord = "hot"
-# endWord = "dog"
-# wordList = ["hot","dog","dot"]
-# a = s.findLadders(beginWord, endWord, wordList)
-# print(a)
+s = Solution()
+beginWord = "hit"
+endWord = "cog"
+wordList = ["hot","dot","dog","lot","log","cog"]
+a = s.findLadders(beginWord, endWord, wordList)
+print(a)
 # @lc code=end
