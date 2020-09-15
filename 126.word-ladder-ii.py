@@ -3,28 +3,34 @@
 #
 # [126] Word Ladder II
 #
-from typing import List
+from typing import List, Dict, Set
 from collections import defaultdict
 
 
 # @lc code=start
 class Solution:
     def findLadders(self, beginWord: str, endWord: str, wordList: List[str]) -> List[List[str]]:
-        # bidirectional bfs
+        # bidirectional bfs + dfs
         words = set([beginWord] + wordList)
         if endWord not in words:
             return []
 
-        alpha = set(''.join(words))
+        chars = set(''.join(words))
         searchBegin = {beginWord}
         searchEnd = {endWord}
-        searchForward = True
+        bfs_forward = True
         stopSearch = False
-        visited = set([beginWord, endWord])
 
-        connectTo = defaultdict(set)
-        connectToBack = defaultdict(set)
+        # distance from begin or end, used to avoid going in circles
+        dist_front = defaultdict(lambda: float('inf'))
+        dist_back = defaultdict(lambda: float('inf'))
+        dist_front[beginWord] = 0
+        dist_back[endWord] = 0
+        # build path graph for bfs in both directions
+        paths_front = defaultdict(set)
+        paths_back = defaultdict(set)
 
+        # bfs
         while searchBegin:
             # put new words in this temp set
             temp = set()
@@ -32,43 +38,58 @@ class Solution:
                 # for each char in word, change to new char
                 # see if we can find in searchEnd
                 for i in range(len(word)):
-                    for c in alpha:
-                        # slice word to get new word
+                    for c in chars:
+                        # slice word to get a new word
                         new_word = word[:i]+c+word[i+1:]
-                        if new_word in words:
-                            if new_word in searchEnd:
-                                stopSearch = True
-                                if searchForward:
-                                    connectTo[word].add(new_word)
-                                else:
-                                    connectToBack[new_word].add(word)
-                            if new_word not in visited:
-                                temp.add(new_word)
-                                visited.add(new_word)
-                                if searchForward:
-                                    connectTo[word].add(new_word)
-                                else:
-                                    connectToBack[new_word].add(word)
+                        # cases to skip the word
+                        # case 1: same word
+                        if new_word == word:
+                            continue
+                        # case 2: word not in original word list
+                        if new_word not in words:
+                            continue
+                        # case 3: going in circles
+                        if bfs_forward:
+                            if dist_front[new_word] <= dist_front[word]:
+                                continue
+                        else:
+                            if dist_back[new_word] <= dist_back[word]:
+                                continue
+                        # find a shorest path
+                        if new_word in searchEnd:
+                            stopSearch = True
+                        else:
+                            temp.add(new_word)
+                        # update path and distance
+                        if bfs_forward:
+                            paths_front[word].add(new_word)
+                            dist_front[new_word] = dist_front[word] + 1
+                        else:
+                            paths_back[new_word].add(word)
+                            dist_back[new_word] = dist_back[word] + 1
+            # all words from searchBegin are explored
+            # if this flag is true, it means all shortest paths are found
+            # no need to explore further
             if stopSearch:
                 break
 
             searchBegin = temp
-            # swap for better performance
-            # also move searchEnd towards searchBegin
-            # thus bidirectional bfs
+            # change dfs direction for better performance
+            # only search from smaller set to reduce search universe
             if len(searchBegin) > len(searchEnd):
-                searchForward = not searchForward
+                bfs_forward = not bfs_forward
                 searchBegin, searchEnd = searchEnd, searchBegin
 
         # dfs all paths
         paths = []
         path = [beginWord]
-        connectTo.update(connectToBack)
-        self.dfs(beginWord, endWord, connectTo, path, paths)
+        # merge to form paths from begin to end
+        paths_front.update(paths_back)
+        self.dfs(beginWord, endWord, paths_front, path, paths)
 
         return paths
 
-    def findLadders_form_word_graph(self, beginWord: str, endWord: str, wordList: List[str]) -> List[List[str]]:
+    def findLadders_via_word_graph(self, beginWord: str, endWord: str, wordList: List[str]) -> List[List[str]]:
         # this problem is a graph problem solved by dfs and bfs
         # 1. realize that word list, incluing begin word, can be viewed a word graph
         #    where words are connected if their diff is 1
@@ -81,64 +102,36 @@ class Solution:
             return []
 
         # build graph, bi-directed unweighted graph of all words
-        graph = self.buildGraph(words)
-
-        # store the predecessor(s) of a given word while doing bfs
-        # use connectTo to form path graph, directed unweighted graph
-        connectTo = {w: set() for w in words}
-
-        # distance from the begin word
-        # use distance to avoid paths longer than shortest distance from begin to end
-        # also use distance to avoid cycles
-        distance = {w: float('inf') for w in words}
-
-        # bfs
-        self.bfs(graph, beginWord, endWord, connectTo, distance)
-
-        # now all our paths can be extracted from connectTo via dfs
-        paths = []
-        path = [beginWord]
-        self.dfs(beginWord, endWord, connectTo, path, paths)
-
-        return paths
-
-    def buildGraph(self, words: set) -> {str: set}:
         graph = {}
         for a in words:
             adjacency = set()
             for b in words:
-                # a is connected to b only their diff is 1
-                if self.diff(a, b) == 1:
+                # a is connected to b only iftheir diff is 1
+                diff = 0
+                for i in range(len(a)):
+                    if a[i] != b[i]:
+                        diff += 1
+                if diff == 1:
                     adjacency.add(b)
             graph[a] = adjacency
-        return graph
 
-    def dfs(self, begin: str, end: str, connectTo: {str: set}, path: List[str], paths: List[List[str]]):
-        # base
-        if begin == end:
-            # save copied path
-            paths.append(path[:])
-            return
-        # for each connected words
-        for to in connectTo[begin]:
-            # add to path
-            path.append(to)
-            # keep dfs
-            self.dfs(to, end, connectTo, path, paths)
-            # backtrack
-            path.pop()
+        # store the predecessor(s) of a given word while doing bfs
+        # use connectTo to form path graph, directed unweighted graph
+        connectTo = defaultdict(set)
 
-    def bfs(self, graph: {str: set}, begin: str, end: str, connectTo: {str: set}, distance: {str: int}):
-
-        # queue for bfs
-        q = [begin]
-        distance[begin] = 0
+        # distance from the begin word
+        # use distance to avoid paths longer than shortest distance from begin to end
+        # also use distance to avoid cycles
+        distance = defaultdict(lambda: float('inf'))
+        distance[beginWord] = 0
 
         # bfs
+        # queue for bfs
+        q = [beginWord]
         while q:
             cur = q.pop(0)
             # no need to explore longer path
-            if distance[cur] >= distance[end]:
+            if distance[cur] >= distance[endWord]:
                 # block the way by NOT adding it's adj to queue
                 continue
             # explore adjacent words
@@ -154,22 +147,27 @@ class Solution:
                 # add adj to queue
                 q.append(adj)
 
-    def diff(self, a: str, b: str) -> int:
-        if len(a) != len(b):
-            return -1
-        diff = 0
-        for i in range(len(a)):
-            if a[i] != b[i]:
-                diff += 1
-        return diff
+        # now all our paths can be extracted from connectTo via dfs
+        paths = []
+        path = [beginWord]
+        self.dfs(beginWord, endWord, connectTo, path, paths)
 
+        return paths
 
-s = Solution()
-x = "magic"
-y = "pearl"
-z = ["flail","halon","lexus","joint","pears","slabs","lorie","lapse","wroth","yalow","swear","cavil","piety","yogis","dhaka","laxer","tatum","provo","truss","tends","deana","dried","hutch","basho","flyby","miler","fries","floes","lingo","wider","scary","marks","perry","igloo","melts","lanny","satan","foamy","perks","denim","plugs","cloak","cyril","women","issue","rocky","marry","trash","merry","topic","hicks","dicky","prado","casio","lapel","diane","serer","paige","parry","elope","balds","dated","copra","earth","marty","slake","balms","daryl","loves","civet","sweat","daley","touch","maria","dacca","muggy","chore","felix","ogled","acids","terse","cults","darla","snubs","boats","recta","cohan","purse","joist","grosz","sheri","steam","manic","luisa","gluts","spits","boxer","abner","cooke","scowl","kenya","hasps","roger","edwin","black","terns","folks","demur","dingo","party","brian","numbs","forgo","gunny","waled","bucks","titan","ruffs","pizza","ravel","poole","suits","stoic","segre","white","lemur","belts","scums","parks","gusts","ozark","umped","heard","lorna","emile","orbit","onset","cruet","amiss","fumed","gelds","italy","rakes","loxed","kilts","mania","tombs","gaped","merge","molar","smith","tangs","misty","wefts","yawns","smile","scuff","width","paris","coded","sodom","shits","benny","pudgy","mayer","peary","curve","tulsa","ramos","thick","dogie","gourd","strop","ahmad","clove","tract","calyx","maris","wants","lipid","pearl","maybe","banjo","south","blend","diana","lanai","waged","shari","magic","duchy","decca","wried","maine","nutty","turns","satyr","holds","finks","twits","peaks","teems","peace","melon","czars","robby","tabby","shove","minty","marta","dregs","lacks","casts","aruba","stall","nurse","jewry","knuth"]
-a = s.findLadders(x, y, z)
-# [["magic","manic","mania","maria","marta","marty","party","parry","perry","peary","pearl"],["magic","manic","mania","maria","maris","paris","parks","perks","peaks","pears","pearl"],["magic","manic","mania","maria","marta","marty","marry","merry","perry","peary","pearl"],["magic","manic","mania","maria","marta","marty","marry","parry","perry","peary","pearl"],["magic","manic","mania","maria","maris","marks","parks","perks","peaks","pears","pearl"]]
-print(a)
+    def dfs(self, begin: str, end: str, graph: Dict[str, Set[str]], path: List[str], paths: List[List[str]]):
+        # base
+        if begin == end:
+            # save copied path
+            paths.append(path[:])
+            return
+        # for each connected words
+        for to in graph[begin]:
+            # add to path
+            path.append(to)
+            # keep dfs
+            self.dfs(to, end, graph, path, paths)
+            # backtrack
+            path.pop()
+
 
 # @lc code=end
