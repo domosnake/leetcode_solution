@@ -52,46 +52,34 @@ class Solution:
     def sortedListToBST(self, head: ListNode) -> TreeNode:
         if head is None:
             return None
+        if head.next is None:
+            return TreeNode(head.val)
         # build BST from inorder
-        length = 0
+        size = 0
         cur = head
         while cur:
-            length += 1
+            size += 1
             cur = cur.next
 
         # build BST by simulating inorder traversal
-        cur = head
-        root = self.__buildBST_inorder(cur, 0, length - 1)
+        root = self.__buildBST_inorder(head, 0, size - 1)
         return root
 
-    def __buildBST_inorder(self, curListNode: ListNode, lo: int, hi: int) -> TreeNode:
+    def __buildBST_inorder(self, head: ListNode, lo: int, hi: int) -> TreeNode:
+        # base cases
         if lo > hi:
             return None
-
+        if lo == hi:
+            return TreeNode(head.val)
+        cur = head
         mid = (lo + hi) // 2
-
-        # simulate inorder traversal
-        # recursively form the left subtree
-        left = self.__buildBST_inorder(curListNode, lo, mid - 1)
-
-        # process the parent node
-        node = TreeNode(curListNode.val)
-        node.left = left
-
-        curListNode = curListNode.next
-
-        # recursively form the right subtree
-        node.right = self.__buildBST_inorder(curListNode, mid + 1, hi)
-        return node
+        # each recursion , cut the lined list into half
+        for _ in range(lo, mid):
+            cur = cur.next
+        root = TreeNode(cur.val)
+        root.left = self.__buildBST_inorder(head, lo, mid - 1)
+        root.right = self.__buildBST_inorder(cur.next, mid + 1, hi)
+        return root
 
 
-s = Solution()
-head = ListNode(1)
-head.next = ListNode(4)
-head.next.next = ListNode(7)
-head.next.next.next = ListNode(11)
-head.next.next.next.next = ListNode(20)
-head.next.next.next.next.next = ListNode(38)
-a = s.sortedListToBST(head)
-print(a)
 # @lc code=end
