@@ -6,7 +6,7 @@ from typing import List
 #           ['item4', 'item5']
 # Output:   ['item3', 'item4', 'item5']
 # Explaination: There 2 associated groups: ['item1', 'item2'] and ['item3', 'item4', 'item5']
-#               Group ['item3', 'item4', 'item5'] is the largeest, return the list lexicographically
+#               Group ['item3', 'item4', 'item5'] is the largest, return the list lexicographically
 
 
 class UnionFind:
