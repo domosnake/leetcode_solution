@@ -151,7 +151,8 @@ data = [[1, 2, 3],
         [2, 4, 4],
         [2, 5, 2],
         [3, 4, 8],
-        [3, 5, 6]]
+        [3, 5, 6],
+        [4, 5, 1]]
 edges = [Edge(d[0], d[1], d[2]) for d in data]
 a = s.MST_Kruskal(edges)
 print(a)
