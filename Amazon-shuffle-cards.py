@@ -79,7 +79,7 @@ class Deck:
             return []
         res = []
         while len(res) < k:
-            i = randint(0, len(self.cards))
+            i = randint(0, len(self.cards) - 1)
             res.append(self.cards.pop(i))
         return res
 

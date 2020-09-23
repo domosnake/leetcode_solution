@@ -75,22 +75,22 @@ class Solution:
         return False
 
 
-# s = Solution()
-# str = """aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-#          aaaaaaaaaaaaaaaaaaaaaaaaabaaaaaaaaaaaaaaaaaaaaaaaa
-#          aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"""
-# wordDict = ["a", "aa", "aaa", "aaaa", "aaaaa", "aaaaaa", "aaaaaaa", "aaaaaaaa", "aaaaaaaaa", "aaaaaaaaaa"]
-# a = s.wordBreak(str, wordDict)
-# print(a)
+s = Solution()
+str = """aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+         aaaaaaaaaaaaaaaaaaaaaaaaabaaaaaaaaaaaaaaaaaaaaaaaa
+         aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"""
+wordDict = ["a", "aa", "aaa", "aaaa", "aaaaa", "aaaaaa", "aaaaaaa", "aaaaaaaa", "aaaaaaaaa", "aaaaaaaaaa"]
+a = s.wordBreak(str, wordDict)
+print(a)
 
-# str = "pineapplepenapple"
-# wordDict = ["apple", "pen", "applepen", "pine", "pineapple"]
-# a = s.wordBreak(str, wordDict)
-# print(a)
+str = "pineapplepenapple"
+wordDict = ["apple", "pen", "applepen", "pine", "pineapple"]
+a = s.wordBreak(str, wordDict)
+print(a)
 
-# str = "catsandog"
-# wordDict = ["cats", "dog", "sand", "and", "cat"]
-# a = s.wordBreak(str, wordDict)
-# print(a)
+str = "catsanddog"
+wordDict = ["cat", "cats", "and", "sand", "dog"]
+a = s.wordBreak(str, wordDict)
+print(a)
 
 # @lc code=end
