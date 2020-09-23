@@ -48,15 +48,14 @@ class Solution:
         matrix[r][c] = '$'
         i += 1
 
-        down = self.dfs(matrix, target, i, r+1, c)
         up = self.dfs(matrix, target, i, r-1, c)
+        down = self.dfs(matrix, target, i, r+1, c)
         right = self.dfs(matrix, target, i, r, c+1)
         left = self.dfs(matrix, target, i, r, c-1)
         found = up or down or right or left
 
         # backtrack, unmark visited
         matrix[r][c] = temp
-        i -= 1
         return found
 
 
