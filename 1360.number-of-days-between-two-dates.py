@@ -1,36 +1,34 @@
 #
-# @lc app=leetcode id=1185 lang=python3
+# @lc app=leetcode id=1360 lang=python3
 #
-# [1185] Day of the Week
+# [1360] Number of Days Between Two Dates
 #
 
 
 # @lc code=start
 class Solution:
-    def dayOfTheWeek(self, day: int, month: int, year: int) -> str:
-        # should have given the starting condition
-        # 1971-01-01 is Friday
-        WEEKDAY = [
-            'Friday', 'Saturday', 'Sunday', 'Monday',
-            'Tuesday', 'Wednesday', 'Thursday'
-        ]
+    def daysBetweenDates(self, date1: str, date2: str) -> int:
+        # date is YYYY-MM-DD
+        return abs(self.daysSince1971(date1) - self.daysSince1971(date2))
+
+    def daysSince1971(self, date: str) -> int:
         MONTH_DAY = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
+        int_date = [int(d) for d in date.split('-')]
         # year
         year_days = 0
-        for y in range(1971, year):
+        for y in range(1971, int_date[0]):
             year_days += 366 if self.isLeapYear(y) else 365
 
         # month
         month_days = 0
-        for m in range(1, month):
+        for m in range(1, int_date[1]):
             month_days += MONTH_DAY[m - 1]
-        if month > 2:
-            month_days += 1 if self.isLeapYear(year) else 0
+        if int_date[1] > 2:
+            month_days += 1 if self.isLeapYear(int_date[0]) else 0
 
         # today
-        today = year_days + month_days + (day - 1)
-        return WEEKDAY[today % 7]
+        return year_days + month_days + (int_date[2] - 1)
 
     def isLeapYear(self, year: int) -> bool:
         if year <= 0:
@@ -44,9 +42,5 @@ class Solution:
                 return True
         return False
 
-
-# s = Solution()
-# a = s.dayOfTheWeek(29, 2, 2016)
-# print(a)
 
 # @lc code=end
