@@ -8,7 +8,7 @@ from typing import List
 
 # @lc code=start
 class Solution:
-    def maxProfit(self, prices: List[int]) -> int:
+    def maxProfit_2(self, prices: List[int]) -> int:
         total_profit = 0
         # max int
         buy_price = float('inf')
@@ -21,5 +21,15 @@ class Solution:
                 buy_price = p
         return total_profit
 
+    def maxProfit(self, prices: List[int]) -> int:
+        # trade as many times as you can
+        # trade whenever the price goes up
+        if not prices or len(prices) < 2:
+            return 0
+        profit = 0
+        for i in range(1, len(prices)):
+            diff = prices[i] - prices[i - 1]
+            profit += diff if diff > 0 else 0
+        return profit
 
 # @lc code=end

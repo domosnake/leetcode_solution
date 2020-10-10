@@ -4,11 +4,17 @@
 # [309] Best Time to Buy and Sell Stock with Cooldown
 #
 from typing import List
+from collections import deque
 
 
 # @lc code=start
 class Solution:
     def maxProfit(self, prices: List[int]) -> int:
+        return self.maxProfit_cooldown_better_space(prices, 1)
+
+    def maxProfit_cooldown_better_space(self, prices: List[int], cooldown: int) -> int:
+        if not prices or len(prices) < 2:
+            return 0
         # finite state machine
         # generalize the cooldown to k days
         #
@@ -22,22 +28,24 @@ class Solution:
         #
         # buy[i] = max(buy[i - 1], sell[i - 1 - cooldown] - prices(i))
         # sell[i] = max(sell[i - 1], buy[i - 1] + price[i])
-        # define the cooldown here, for the problem, COOLDOWN = 1
-        COOLDOWN = 1
+        #
         # to optimize space from O(n) to O(k)
         # we only 2 buy states, buy[0] = prev, buy[1]= cur
-        buy = [float('-inf'), 0]
+        #
         # we only need sell states with size 2 + COOLDOWN
-        # becuase we need to retrieve the balance before cooldown
-        # you may ask why I choose pop() and append() to update sell state
-        # because I am lazy, pop() and append() can do shifting for me
-        sell = [0]
+        # because we need to retrieve the balance before cooldown
+        # for that we will use a doubly linked list for quick head and tail access
+        buy = [float('-inf'), 0]
+        sell = deque()
+        sell.append(0)
         for i, p in enumerate(prices):
-            # pop and retieve the sell state
-            if i < COOLDOWN:
+            # before cooldown, when you can only buy in
+            if i < cooldown:
                 buy[1] = max(buy[0], -p)
+            # after cooldown, you can sell
             else:
-                buy[1] = max(buy[0], sell.pop(0) - p)
+                sell_at = sell.popleft()
+                buy[1] = max(buy[0], sell_at - p)
             sell.append(max(sell[-1], buy[0] + p))
             # move state for buy
             # note that sell state has been updated by pop(head) and append(tail)
@@ -46,15 +54,16 @@ class Solution:
         # time: O(n), space: O(k) where k is number of cooldown
         return sell[-1]
 
-    def maxProfit_more_space(self, prices: List[int]) -> int:
-        COOLDOWN = 1
+    def maxProfit_cooldown(self, prices: List[int], cooldown: int) -> int:
+        if not prices or len(prices) < 2:
+            return 0
         buy = [float('-inf')] * (len(prices) + 1)
         sell = [0] * (len(prices) + 1)
         for i, p in enumerate(prices):
-            if i < COOLDOWN:
+            if i < cooldown:
                 buy[i + 1] = max(buy[i], -p)
             else:
-                buy[i + 1] = max(buy[i], sell[i - COOLDOWN] - p)
+                buy[i + 1] = max(buy[i], sell[i - cooldown] - p)
             sell[i + 1] = max(sell[i], buy[i] + p)
         # time: O(n), space: O(n)
         return sell[-1]

@@ -8,7 +8,7 @@ from typing import List
 
 # @lc code=start
 class Solution:
-    def maxProfit(self, prices: List[int]) -> int:
+    def maxProfit_2(self, prices: List[int]) -> int:
         # can only one trade, buy and sell
         max_profit = 0
         if len(prices) < 2:
@@ -21,5 +21,15 @@ class Solution:
             max_profit = max(max_profit, profit)
         return max_profit
 
+    def maxProfit(self, prices: List[int]) -> int:
+        if not prices or len(prices) < 2:
+            return 0
+        # trade once - buy and sell
+        profits = [0] * len(prices)
+        buy_price = float('inf')
+        for i, p in enumerate(prices):
+            buy_price = min(buy_price, p)
+            profits[i] = p - buy_price
+        return max(profits)
 
 # @lc code=end

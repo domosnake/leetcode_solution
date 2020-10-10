@@ -47,7 +47,7 @@ class Solution:
                     total_profit += net_profit
                     # after trade, need to set min price to prev price - fee
                     # why lower the buy price? because if later we find a higher sell price
-                    # we wanna merge 2 transcations to 1, thus, we need to avoid double pay fees
+                    # we wanna merge 2 transcations to 1, thus, we need to avoid double paying fees
                     min_price = prev_price - fee
             # update prev price
             prev_price = price

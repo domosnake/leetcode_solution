@@ -10,7 +10,7 @@ from typing import List
 class Solution:
     def maxProfit(self, k: int, prices: List[int]) -> int:
         # edge cases
-        if len(prices) < 2 or k < 1:
+        if k <= 0 or not prices or len(prices) < 2:
             return 0
         # when k >> len(price), we may face memory issue
         # in this case, it downgrades to Best Time to Buy and Sell Stock II
