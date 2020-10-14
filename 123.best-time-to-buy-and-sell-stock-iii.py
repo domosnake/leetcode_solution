@@ -95,7 +95,7 @@ class Solution:
         else:
             return odd_profit[-1]
 
-    def maxProfit_k_trans_state_machine(self, prices: List[int], k: int) -> int:
+    def maxProfit_k_trans_state_machine_2(self, prices: List[int], k: int) -> int:
         if k <= 0 or not prices or len(prices) < 2:
             return 0
         if k >= len(prices):
@@ -137,6 +137,27 @@ class Solution:
         # time: O(kn) space: O(k)
         return balance[-1]
 
+    def maxProfit_k_trans_state_machine(self, prices: List[int], k: int) -> int:
+        if k <= 0 or not prices or len(prices) < 2:
+            return 0
+        if k >= len(prices):
+            k = len(prices)
+        # state transition
+        # buy[i] -> sell[i] -> buy[i + 1] -> sell[i + 1]...
+        # balance
+        buy = [float('-inf')] * k
+        sell = [float('-inf')] * k
+        for p in prices:
+            # for each state
+            for i in range(k):
+                if i == 0:
+                    after_buy = -p
+                else:
+                    after_buy = sell[i - 1] - p
+                buy[i] = max(buy[i], after_buy)
+                after_sell = buy[i] + p
+                sell[i] = max(sell[i], after_sell)
+        return sell[-1]
 
 # s = Solution()
 # a = s.maxProfit([3, 3, 5, 0, 0, 3, 1, 4])

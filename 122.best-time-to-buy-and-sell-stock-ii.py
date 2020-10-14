@@ -21,7 +21,7 @@ class Solution:
                 buy_price = p
         return total_profit
 
-    def maxProfit(self, prices: List[int]) -> int:
+    def maxProfit_3(self, prices: List[int]) -> int:
         # trade as many times as you can
         # trade whenever the price goes up
         if not prices or len(prices) < 2:
@@ -31,5 +31,21 @@ class Solution:
             diff = prices[i] - prices[i - 1]
             profit += diff if diff > 0 else 0
         return profit
+
+    def maxProfit(self, prices: List[int]) -> int:
+        # trade as many times as you can
+        # trade whenever the price goes up
+        if not prices or len(prices) < 2:
+            return 0
+        profits = []
+        buy = float('inf')
+        for p in prices:
+            buy = min(buy, p)
+            diff = p - buy
+            if diff > 0:
+                profits.append(diff)
+                # have to buy at current price
+                buy = p
+        return sum(profits)
 
 # @lc code=end

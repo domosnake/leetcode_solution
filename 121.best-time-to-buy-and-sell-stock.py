@@ -21,7 +21,7 @@ class Solution:
             max_profit = max(max_profit, profit)
         return max_profit
 
-    def maxProfit(self, prices: List[int]) -> int:
+    def maxProfit_3(self, prices: List[int]) -> int:
         if not prices or len(prices) < 2:
             return 0
         # trade once - buy and sell
@@ -31,5 +31,16 @@ class Solution:
             buy_price = min(buy_price, p)
             profits[i] = p - buy_price
         return max(profits)
+
+    def maxProfit(self, prices: List[int]) -> int:
+        if not prices or len(prices) < 2:
+            return 0
+        buy = float('inf')
+        profit = float('-inf')
+        for p in prices:
+            buy = min(buy, p)
+            profit = max(profit, p - buy)
+        return profit
+
 
 # @lc code=end
