@@ -34,8 +34,7 @@ class Solution:
                     break
         return root
 
-    def lowestCommonAncestorInBST(self, root: TreeNode, node1: int,
-                                  node2: int) -> TreeNode:
+    def lowestCommonAncestorInBST(self, root: TreeNode, node1: int, node2: int) -> TreeNode:
         if root is None:
             return None
         node = root
@@ -65,8 +64,7 @@ class Solution:
             else:
                 return distance
 
-    def distanceBetweenNodesInBST(self, nums: List[int], node1: int,
-                                  node2: int) -> int:
+    def distanceBetweenNodesInBST(self, nums: List[int], node1: int, node2: int) -> int:
         # build bst
         treeSet = set()
         root = None
