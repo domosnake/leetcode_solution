@@ -4,6 +4,7 @@
 # [206] Reverse Linked List
 #
 
+
 # @lc code=start
 # Definition for singly-linked list.
 class ListNode:
@@ -32,12 +33,28 @@ class Solution:
     def reverseListRecursive(self, head: ListNode) -> ListNode:
         return self.doReverseRecursive(head, None)
 
-    def doReverseRecursive(self, head: ListNode, newHead: ListNode) -> ListNode:
+    def doReverseRecursive(self, head: ListNode,
+                           newHead: ListNode) -> ListNode:
         if head is None:
             return newHead
         next_node = head.next
         head.next = newHead
         return self.doReverseRecursive(next_node, head)
 
+    def build_linked_list(self, list):
+        fake_head = ListNode(-1)
+        cur = fake_head
+        for n in list:
+            cur.next = ListNode(n)
+            cur = cur.next
+
+        return fake_head.next
+
+
+s = Solution()
+x = [1, 2, 3, 4]
+h = s.build_linked_list(x)
+a = s.reverseList(h)
+print(a)
 
 # @lc code=end

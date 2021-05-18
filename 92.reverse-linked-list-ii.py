@@ -4,12 +4,15 @@
 # [92] Reverse Linked List II
 #
 
+
 # @lc code=start
 # Definition for singly-linked list.
-# class ListNode:
-#     def __init__(self, val=0, next=None):
-#         self.val = val
-#         self.next = next
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+
 class Solution:
     def reverseBetween(self, head: ListNode, m: int, n: int) -> ListNode:
         if not head or not head.next or m == n:
@@ -34,5 +37,20 @@ class Solution:
             pre_reverse.next.next = temp
         return fakeHead.next
 
+    def build_linked_list(self, list):
+        fake_head = ListNode(-1)
+        cur = fake_head
+        for n in list:
+            cur.next = ListNode(n)
+            cur = cur.next
+
+        return fake_head.next
+
+
+s = Solution()
+x = [1, 2, 4, 8, 9, 12]
+h = s.build_linked_list(x)
+a = s.reverseBetween(h, 3, 6)
+print(a)
 
 # @lc code=end

@@ -21,4 +21,9 @@ class Solution:
         return maxLen
 
 
+s = Solution()
+nums = [0, 1, 2, 6, 8, 9, 3, 4, 11, 17, 20, 21, 22]
+a = s.longestConsecutive(nums)
+print(a)
+
 # @lc code=end
