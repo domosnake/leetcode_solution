@@ -42,7 +42,6 @@ class Solution:
         # greedy - always try to pick the largest coin
         coins.sort(reverse=True)
 
-        min_count = float('inf')
         # (count, amount)
         queue = deque()
         queue.append((0, amount))
@@ -55,7 +54,7 @@ class Solution:
                 remain = cur_amount - coin
                 # found a combination
                 if remain == 0:
-                    return min(min_count, count)
+                    return count
                 # coin is too big
                 elif remain < 0:
                     continue
@@ -67,8 +66,8 @@ class Solution:
         return -1
 
 
-# s = Solution()
-# a = s.coinChange([1, 5, 7], 11)
-# print(a)
+s = Solution()
+a = s.coinChange([1, 5, 7], 11)
+print(a)
 
 # @lc code=end
