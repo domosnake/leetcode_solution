@@ -27,10 +27,11 @@
 # output = [-1, -1, 4, 4, 8]
 # The 3rd element of output is 2*2*1 = 4, the 4th is 2*2*1 = 4, and the 5th is 2*2*2 = 8.
 from heapq import heappush, heappop
+import math
 
 
 class Solution:
-    def findMaxProduct_heap(self, arr):
+    def findMaxProduct_max_heap(self, arr):
         # min heap by default
         res = [-1] * len(arr)
         max_heap = []
@@ -51,3 +52,28 @@ class Solution:
             heappush(max_heap, -c)
 
         return res
+
+    def findMaxProduct_min_heap(self, arr):
+        # running top k in a stream
+        res = [-1] * len(arr)
+        min_heap = []
+        prod = 1
+        K = 3
+        # init
+        for i in range(K):
+            heappush(min_heap, arr[i])
+        prod = math.prod(min_heap)
+        res[K - 1] = prod
+
+        for i in range(K, len(arr)):
+            # less than min val
+            if arr[i] > min_heap[0]:
+                prod = prod * arr[i] // heappop(min_heap)
+                heappush(min_heap, arr[i])
+            res[i] = prod
+        return res
+
+
+s = Solution()
+a = s.findMaxProduct_min_heap([2, 1, 2, 1, 2])
+print(a)
