@@ -37,20 +37,27 @@ class Solution:
         # pre order: parent, left(right) child, right(left)
         # post order: left(right) child, right(left), parent
         # level order: bfs
-        node = root
+        cur = root
         stack = []
         res = []
-        while node or stack:
+        while cur or stack:
             # keep going left
-            while node:
-                stack.append(node)
-                node = node.left
-            node = stack.pop()
+            while cur:
+                stack.append(cur)
+                cur = cur.left
+            cur = stack.pop()
             # add left, parent
-            res.append(node.val)
+            res.append(cur.val)
             # then go right
-            node = node.right
+            cur = cur.right
         return res
 
+
+s = Solution()
+root = TreeNode(1)
+root.right = TreeNode(2)
+root.right.left = TreeNode(3)
+a = s.test(root)
+print(a)
 
 # @lc code=end
