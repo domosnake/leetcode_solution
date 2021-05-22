@@ -43,22 +43,24 @@ class Solution:
         return dp[-1] == float('inf')
 
     def canGetExactChange_bfs(self, targetMoney, denominations):
+        denominations.sort(reversed=True)
         # total bills and cur money
         queue = deque()
-        queue.append((0, 0))
+        # (count, amount)
+        queue.append((0, targetMoney))
         visited = set()
         while queue:
-            total, cur = queue.popleft()
+            count, cur = queue.popleft()
             # change a new bill
-            total += 1
+            count += 1
             for d in denominations:
-                next_money = cur + d
-                if next_money == targetMoney:
+                remain = cur - d
+                if remain == 0:
                     return True
                 # continue to change
-                if next_money < targetMoney:
-                    if next_money not in visited:
-                        visited.add(next_money)
-                        queue.append((total, next_money))
+                if remain > 0:
+                    if remain not in visited:
+                        visited.add(remain)
+                        queue.append((count, remain))
 
         return False
