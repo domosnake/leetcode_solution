@@ -6,6 +6,8 @@
 
 # @lc code=start
 # Definition for a binary tree node.
+
+
 class TreeNode:
     def __init__(self, val=0, left=None, right=None):
         self.val = val
@@ -17,16 +19,20 @@ class Solution:
     def isValidBST(self, root: TreeNode) -> bool:
         if not root:
             return True
-        return self.dfs(root.left, float('-inf'), root.val) and self.dfs(root.right, root.val, float('inf'))
+        MAX = float('inf')
+        MIN = float('-inf')
+        return self.dfs(root, MIN, MAX)
 
-    def dfs(self, node: TreeNode, lower: int, upper: int) -> bool:
-        if not node:
+    def dfs(self, cur: TreeNode, lo: int, hi: int) -> bool:
+        if not cur:
             return True
         # check this node
-        if not (lower < node.val < upper):
+        if cur.val <= lo or cur.val >= hi:
             return False
         # dfs, both subtrees must be true
-        return self.dfs(node.left, lower, node.val) and self.dfs(node.right, node.val, upper)
+        # lo < left child < node
+        # node < right child < hi
+        return self.dfs(cur.left, lo, cur.val) and self.dfs(cur.right, cur.val, hi)
 
     def isValidBST_inorder(self, root: TreeNode) -> bool:
         # inorder traversal of a BST returns non-descending nodes
@@ -34,21 +40,29 @@ class Solution:
         if not root:
             return True
         stack = []
-        node = root
-        prev = None
-        while node or stack:
+        cur = root
+        prev = TreeNode('-inf')
+        while cur or stack:
             # keep going left
-            while node:
-                stack.append(node)
-                node = node.left
-            node = stack.pop()
-            if prev:
-                # check if current node > prev node
-                if prev.val >= node.val:
-                    return False
-            prev = node
-            node = node.right
+            while cur:
+                stack.append(cur)
+                cur = cur.left
+            cur = stack.pop()
+            # check if current node > prev node
+            if prev.val >= cur.val:
+                return False
+            prev = cur
+            cur = cur.right
         return True
 
+
+# s = Solution()
+# root = TreeNode(5)
+# root.left = TreeNode(4)
+# root.right = TreeNode(6)
+# root.right.left = TreeNode(3)
+# root.right.right = TreeNode(7)
+# a = s.isValidBST(root)
+# print(a)
 
 # @lc code=end

@@ -8,7 +8,7 @@
 # @lc code=start
 class Solution:
     def numTrees_dp(self, n: int) -> int:
-        if n < 0:
+        if n <= 0:
             return 0
         # buttom up
         dp = [1, 1]
@@ -24,7 +24,7 @@ class Solution:
 
     # dp optimized
     def numTrees(self, n: int) -> int:
-        if n < 0:
+        if n <= 0:
             return 0
         # buttom up
         dp = [1, 1]

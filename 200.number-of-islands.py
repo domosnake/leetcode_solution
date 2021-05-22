@@ -10,31 +10,31 @@ from typing import List
 class Solution:
     def numIslands(self, grid: List[List[str]]) -> int:
         islands = 0
-        # build matrix
-        for row in range(len(grid)):
-            for col in range(len(grid[0])):
+        # search in grid
+        for r in range(len(grid)):
+            for c in range(len(grid[0])):
                 # if the cell is land
-                if grid[row][col] == '1':
+                if grid[r][c] == '1':
                     # means we find an island
                     islands += 1
                     # search the if surrounding cells are connected to this cell
-                    self.dfs(row, col, grid)
+                    self.dfs(grid, r, c)
         return islands
 
-    def dfs(self, r: int, c: int, matrix: List[List[str]]):
+    def dfs(self, g: List[List[str]], r: int, c: int):
         # beyond boundary
-        if r >= len(matrix) or c >= len(matrix[0]) or r < 0 or c < 0:
+        if r >= len(g) or c >= len(g[0]) or r < 0 or c < 0:
             return
         # dfs to a visited cell, or water
-        if matrix[r][c] == '$' or matrix[r][c] == '0':
+        if g[r][c] != '1':
             return
         # mark visited
-        matrix[r][c] = '$'
+        g[r][c] = '$'
         # keep searching 4 directions
-        self.dfs(r + 1, c, matrix)
-        self.dfs(r - 1, c, matrix)
-        self.dfs(r, c + 1, matrix)
-        self.dfs(r, c - 1, matrix)
+        self.dfs(g, r + 1, c)
+        self.dfs(g, r - 1, c)
+        self.dfs(g, r, c + 1)
+        self.dfs(g, r, c - 1)
 
 
 # @lc code=end
