@@ -16,7 +16,7 @@ class TreeNode:
 
 
 class Solution:
-    def recoverTree(self, root: TreeNode) -> None:
+    def recoverTree_recursive(self, root: TreeNode) -> None:
         """
         Do not return anything, modify root in-place instead.
         """
@@ -43,7 +43,7 @@ class Solution:
         self._findInvalid(node.left, lo, node, invalid)
         self._findInvalid(node.right, node, hi, invalid)
 
-    def recoverTree_iterative(self, root: TreeNode) -> None:
+    def recoverTree(self, root: TreeNode) -> None:
         """
         Do not return anything, modify root in-place instead.
         """
@@ -83,11 +83,11 @@ class Solution:
         n1.val, n2.val = n2.val, n1.val
 
 
-s = Solution()
-root = TreeNode(2)
-root.left = TreeNode(4)
-root.right = TreeNode(3)
-s.recoverTree(root)
+# s = Solution()
+# root = TreeNode(3)
+# root.left = TreeNode(4)
+# root.right = TreeNode(2)
+# s.recoverTree(root)
 
 # root = TreeNode(3)
 # root.left = TreeNode(1)
