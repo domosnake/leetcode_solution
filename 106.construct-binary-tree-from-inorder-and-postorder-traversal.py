@@ -60,7 +60,7 @@ class Solution:
             val_to_index[v] = i
         return self.do_buildTree(postRange, inRange, postorder, val_to_index)
 
-    def do_buildTree(self, postRange: (int, int), inRange: (int, int), postorder: List[int], table: {int: int}) -> TreeNode:
+    def do_buildTree(self, postRange, inRange, postorder, table) -> TreeNode:
         # check range
         if postRange[0] > postRange[1] or inRange[0] > inRange[1]:
             return None
