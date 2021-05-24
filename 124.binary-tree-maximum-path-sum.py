@@ -3,7 +3,6 @@
 #
 # [124] Binary Tree Maximum Path Sum
 #
-from typing import List
 
 
 # @lc code=start
@@ -17,31 +16,31 @@ class TreeNode:
 
 class Solution:
     def maxPathSum(self, root: TreeNode) -> int:
-        res = [float('-inf')]
-        self.findMaxPathSum(root, res)
-        return res[0]
+        if not root:
+            return 0
+        max_sum = [float('-inf')]
+        self.dfs(root, max_sum)
+        return max_sum[0]
 
-    def findMaxPathSum(self, node: TreeNode, res: List[int]) -> int:
-        if node is None:
+    def dfs(self, node, max_sum):
+        if not node:
             return 0
 
-        left_path_sum = max(self.findMaxPathSum(node.left, res), 0)
-        right_path_sum = max(self.findMaxPathSum(node.right, res), 0)
-        # for node, we can form a path left -> node -> right
-        cur_max_path_sum = left_path_sum + node.val + right_path_sum
-        res[0] = max(res[0], cur_max_path_sum)
+        L = max(self.dfs(node.left, max_sum), 0)
+        R = max(self.dfs(node.right, max_sum), 0)
+        max_sum[0] = max(max_sum[0], L + R + node.val)
 
-        # when going up, we can only pick one path, either left or right
-        return node.val + max(left_path_sum, right_path_sum)
+        # pick the max sum of subtree
+        return node.val + max(L, R)
 
 
-s = Solution()
-root = TreeNode(-10)
-root.left = TreeNode(9)
-root.right = TreeNode(20)
-root.right.left = TreeNode(15)
-root.right.right = TreeNode(7)
-a = s.maxPathSum(root)
-print(a)
+# s = Solution()
+# root = TreeNode(-10)
+# root.left = TreeNode(9)
+# root.right = TreeNode(20)
+# root.right.left = TreeNode(15)
+# root.right.right = TreeNode(7)
+# a = s.maxPathSum(root)
+# print(a)
 
 # @lc code=end

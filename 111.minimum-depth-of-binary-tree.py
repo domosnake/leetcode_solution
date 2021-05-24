@@ -1,9 +1,8 @@
 #
-# @lc app=leetcode id=102 lang=python3
+# @lc app=leetcode id=111 lang=python3
 #
-# [102] Binary Tree Level Order Traversal
+# [111] Minimum Depth of Binary Tree
 #
-from typing import List
 from collections import deque
 
 
@@ -17,25 +16,24 @@ class TreeNode:
 
 
 class Solution:
-    def levelOrder(self, root: TreeNode) -> List[List[int]]:
-        # level order = bfs level  by level
+    def minDepth(self, root: TreeNode) -> int:
         if not root:
-            return []
-        levels = []
+            return 0
         q = deque()
         q.append(root)
+        level = 0
         while q:
-            level = []
+            level += 1
             for _ in range(len(q)):
-                # pop queue head
                 node = q.popleft()
-                level.append(node.val)
                 if node.left:
                     q.append(node.left)
                 if node.right:
                     q.append(node.right)
-            levels.append(level)
-        return levels
+                if not node.left and not node.right:
+                    return level
+
+        return level
 
 
 # @lc code=end
