@@ -19,13 +19,13 @@ class Solution:
             return None
         node = root
         while node:
-            # left sub tree
+            # both p and q in left subtree
             if p.val < node.val and q.val < node.val:
                 node = node.left
-            # right sub tree
+            # both p and q in right subtree
             elif p.val > node.val and q.val > node.val:
                 node = node.right
-            # node1 and node2 on diff sub tree
+            # p and q on diff sub tree
             else:
                 return node
 # @lc code=end

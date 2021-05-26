@@ -4,6 +4,7 @@
 # [437] Path Sum III
 #
 from collections import defaultdict
+from typing import DefaultDict
 
 
 # @lc code=start
@@ -35,7 +36,7 @@ class Solution:
         paths = self.dfs(root, 0, sum, lookup)
         return paths
 
-    def dfs(self, node: TreeNode, curPathSum: int, target: int, lookup: {int: int}) -> int:
+    def dfs(self, node: TreeNode, curPathSum: int, target: int, lookup: DefaultDict[int: int]) -> int:
         if not node:
             return 0
         curPathSum += node.val

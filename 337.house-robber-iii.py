@@ -3,6 +3,7 @@
 #
 # [337] House Robber III
 #
+from typing import Tuple
 
 
 # @lc code=start
@@ -16,12 +17,13 @@ class TreeNode:
 
 class Solution:
     def rob(self, root: TreeNode) -> int:
+        # bottom up
         if root is None:
             return 0
         res = self.dfs(root)
         return max(res[0], res[1])
 
-    def dfs(self, node: TreeNode) -> (int, int):
+    def dfs(self, node: TreeNode) -> Tuple[int, int]:
         if node is None:
             return (0, 0)
         left = self.dfs(node.left)
@@ -33,5 +35,13 @@ class Solution:
         not_rob_cur = max(left) + max(right)
         return (rob_cur, not_rob_cur)
 
+
+# root = TreeNode(4)
+# root.left = TreeNode(1)
+# root.left.left = TreeNode(2)
+# root.left.left.left = TreeNode(3)
+# s = Solution()
+# a = s.rob(root)
+# print(a)
 
 # @lc code=end
