@@ -3,7 +3,7 @@
 #
 # [139] Word Break
 #
-from typing import List
+from typing import List, str
 
 
 # @lc code=start
