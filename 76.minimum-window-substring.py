@@ -9,40 +9,41 @@ from collections import Counter
 # @lc code=start
 class Solution:
     def minWindow(self, s: str, t: str) -> str:
-        # sliding window
-        counter = Counter(t)
-        required = len(t)
+        if len(t) > len(s):
+            return ''
 
-        start = 0
-        end = 0
-        min_win = len(s) + 1
-        min_win_start = -1
+        lent = len(t)
+        target = Counter(t)
+        min_window = len(s) + 1
+        min_win_lo = -1
 
-        while end < len(s):
-            if s[end] in counter:
-                if counter[s[end]] > 0:
-                    required -= 1
-                counter[s[end]] -= 1
+        lo = 0
+        hi = 0
+        while hi < len(s):
+            # grow
+            hi_char = s[hi]
+            if hi_char in target:
+                if target[hi_char] > 0:
+                    lent -= 1
+                target[hi_char] -= 1
 
-            while required == 0:
+            while lent == 0:
+                # shrink
+                if min_window > hi - lo + 1:
+                    min_window = hi - lo + 1
+                    min_win_lo = lo
 
-                # update min window
-                if min_win > end - start + 1:
-                    min_win = end - start + 1
-                    min_win_start = start
+                lo_char = s[lo]
+                if lo_char in target:
+                    target[lo_char] += 1
+                    if target[lo_char] > 0:
+                        lent += 1
 
-                if s[start] in counter:
-                    counter[s[start]] += 1
-                    if counter[s[start]] > 0:
-                        required += 1
+                lo += 1
+            hi += 1
 
-                # slide start
-                start += 1
-            # slide end
-            end += 1
-
-        if min_win <= len(s) and min_win_start >= 0:
-            return s[min_win_start:min_win_start + min_win]
+        if min_window <= len(s) and min_win_lo >= 0:
+            return s[min_win_lo:min_win_lo + min_window]
         else:
             return ''
 

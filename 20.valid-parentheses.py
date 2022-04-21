@@ -4,29 +4,25 @@
 # [20] Valid Parentheses
 #
 
+
 # @lc code=start
 class Solution:
     def isValid(self, s: str) -> bool:
-        open_parentheses = {'(': ')', '{': '}', '[': ']'}
-        close_parentheses = {')', ']', '}'}
-        stack = []
-        for p in s:
-            # open
-            if p in open_parentheses:
-                stack.append(p)
-            # close
-            elif p in close_parentheses:
-                if not stack:
-                    return False
-                open_p = stack.pop()
-                if open_parentheses[open_p] != p:
-                    return False
-            # ignore any other characters
-            else:
-                continue
-        if stack:
+        # brackeys must be in pair to be valid
+        # for each type: opens = closes & first open then close
+        if len(s) % 2 != 0:
             return False
-        return True
+        opens = {'(', '[', '{'}
+        closes = {')': '(', ']': '[', '}': '{'}
+        stack = []
+        for c in s:
+            if c in opens:
+                stack.append(c)
+            elif len(stack) == 0 or stack[-1] != closes[c]:
+                return False
+            else:
+                stack.pop()
+        return len(stack) == 0
 
 
 # @lc code=end

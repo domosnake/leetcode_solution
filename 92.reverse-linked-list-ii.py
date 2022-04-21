@@ -15,42 +15,30 @@ class ListNode:
 
 class Solution:
     def reverseBetween(self, head: ListNode, m: int, n: int) -> ListNode:
-        if not head or not head.next or m == n:
+        if m == n:
             return head
-        # fake head
-        fakeHead = ListNode(-1)
-        fakeHead.next = head
-        pre_reverse = fakeHead
-        # find node before to-be-reversed group
+        dummyHead = ListNode(0, head)
+        prevHead = dummyHead
         for _ in range(m - 1):
-            pre_reverse = pre_reverse.next
-        tail = pre_reverse.next
+            prevHead = prevHead.next
 
+        cur = prevHead.next
         for _ in range(n - m):
-            # save next node
-            temp = pre_reverse.next
-            # link to tail next
-            pre_reverse.next = tail.next
-            # set tail to next
-            tail.next = tail.next.next
-            # set head
-            pre_reverse.next.next = temp
-        return fakeHead.next
+            curHead = prevHead.next
+            nextNode = cur.next
 
-    def build_linked_list(self, list):
-        fake_head = ListNode(-1)
-        cur = fake_head
-        for n in list:
-            cur.next = ListNode(n)
-            cur = cur.next
-
-        return fake_head.next
+            prevHead.next = nextNode
+            cur.next = nextNode.next
+            nextNode.next = curHead
+        return dummyHead.next
 
 
-s = Solution()
-x = [1, 2, 4, 8, 9, 12]
-h = s.build_linked_list(x)
-a = s.reverseBetween(h, 3, 6)
-print(a)
+# s = Solution()
+# head = ListNode(1)
+# head.next = ListNode(2)
+# head.next.next = ListNode(3)
+# head.next.next.next = ListNode(4)
+# head.next.next.next.next = ListNode(5)
+# print(s.reverseBetween(head, 2, 4))
 
 # @lc code=end

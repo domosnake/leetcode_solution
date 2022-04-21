@@ -3,6 +3,7 @@
 #
 # [226] Invert Binary Tree
 #
+from collections import deque
 
 
 # @lc code=start
@@ -16,19 +17,21 @@ class TreeNode:
 
 class Solution:
     def invertTree(self, root: TreeNode) -> TreeNode:
-        self._dfs(root)
+        if not root:
+            return root
+        # swap using bfs
+        queue = deque()
+        queue.appendleft(root)
+        while queue:
+            node = queue.pop()
+            temp = node.left
+            node.left = node.right
+            node.right = temp
+            if node.left:
+                queue.appendleft(node.left)
+            if node.right:
+                queue.appendleft(node.right)
         return root
-
-    def _dfs(self, node):
-        if not node:
-            return
-
-        temp = node.left
-        node.left = node.right
-        node.right = temp
-
-        self._dfs(node.left)
-        self._dfs(node.right)
 
 
 # @lc code=end

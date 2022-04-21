@@ -9,24 +9,33 @@ from typing import List
 # @lc code=start
 class Solution:
     def partition(self, s: str) -> List[List[str]]:
-        res = []
-        self._dfs(s, [], res)
-        return res
+        substrs = []
+        self._dfs(s, [], substrs)
+        return substrs
 
-    def _dfs(self, s, path, res):
+    def _dfs(self, s, substr, substrs):
         if not s:
-            res.append(path[:])
+            substrs.append(substr[:])
             return
 
         for i in range(1, len(s) + 1):
-            if self._isPal(s[:i]):
-                path.append(s[:i])
-                self._dfs(s[i:], path, res)
+            substr_to_check = s[:i]
+            if self._is_palindrome(substr_to_check):
+                substr.append(substr_to_check)
+                remaining_substr = s[i:]
+                self._dfs(remaining_substr, substr, substrs)
                 # backtrack
-                path.pop()
+                substr.pop()
 
-    def _isPal(self, s):
-        return s == s[::-1]
+    def _is_palindrome(self, s: str) -> bool:
+        lo = 0
+        hi = len(s) - 1
+        while lo < hi:
+            if s[lo] != s[hi]:
+                return False
+            lo += 1
+            hi -= 1
+        return True
 
 
 # @lc code=end
