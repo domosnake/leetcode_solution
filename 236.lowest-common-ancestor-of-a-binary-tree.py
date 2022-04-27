@@ -22,12 +22,15 @@ class Solution:
             return root
         left = self.lowestCommonAncestor(root.left, p, q)
         right = self.lowestCommonAncestor(root.right, p, q)
+        # if left and right are found, meaning root must be CLA
         if left and right:
             return root
-        if not left:
-            return right
-        if not right:
+        # if left is found, meaning p or q exists in left subtree, and it's the CLA
+        if left:
             return left
+        # same for right node
+        if right:
+            return right
 
 
 # s = Solution()
