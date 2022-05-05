@@ -35,9 +35,18 @@ class Solution:
         if not board or not words:
             return []
 
+        # when building trie
+        # we can exclude the words
+        # that doesn't start with char in board
+        board_char = set()
+        for r in range(len(board)):
+            for c in range(len(board[0])):
+                board_char.add(board[r][c])
         trie = Trie()
         for word in words:
-            trie.insert(word)
+            # prune trie
+            if word[0] in board_char:
+                trie.insert(word)
 
         res = set()
         for r in range(len(board)):
