@@ -3,13 +3,12 @@
 #
 # Your task is to design and implement below class and methods.
 # You may create additional helper methods or classes as you see fit.
-# You have max freedom to use any data type or structure, error handling, code logic as long as it serves the purpose and you can explain the reasoning.
+# You have max freedom to use any data type or structure, error handling, code logic as long as it serves the purpose
+# and you can explain the reasoning.
 #
 # When you design the system, consider Extensibility and Scalability.
 from heapq import heappush, heappop, heapify
 from datetime import datetime as dt
-from re import A
-from sys import ps1
 from typing import List
 
 
@@ -35,7 +34,7 @@ class ER:
         if len(severities) == 0:
             raise ValueError('At least one severity must be specified')
         self.max_heap = []
-        self.codeBlue = []
+        self.codeBlueList = []
         self.capacity = capacity
         self.triage_codes = {}
         for s in severities:
@@ -54,7 +53,7 @@ class ER:
         if patient.severity not in self.triage_codes:
             raise ValueError('Invalid severity')
         # sorting by severity, then by admin datetime
-        heappush(self.max_heap, (-patient.severity, dt.now(), patient))
+        heappush(self.max_heap, (-patient.severity, dt.now(), patient.patient_id, patient))
         return True
 
     # Method. Treat and discharge(remove) the next patient from the waiting line.
@@ -63,13 +62,13 @@ class ER:
     # If there are patient(s) in Code Blue, all patients in Code Blue
     # should be treated firstly and removed from the waiting line.
     def treat(self) -> List[Patient]:
-        if self.codeBlue:
-            temp = self.codeBlue[::]
-            self.codeBlue.clear()
+        if self.codeBlueList:
+            temp = self.codeBlueList[::]
+            self.codeBlueList.clear()
             return temp
-        severity, admin_dt, patient = heappop(self.max_heap)
+        severity, admin_dt, pid, patient = heappop(self.max_heap)
         severity *= -1
-        return patient
+        return [patient]
 
     # Method. When a patient is in cardiac or respiratory arrest,
     # a Code Blue is called to assign a special severity to the patient.
@@ -77,20 +76,21 @@ class ER:
     # patient - data type can be defined by you
     def codeBlue(self, patient: Patient):
         found = False
-        for p in self.max_heap:
-            if p.id == patient.id:
+        for obj in self.max_heap:
+            _, _, _, p = obj
+            if p.patient_id == patient.patient_id:
                 found = True
                 break
         if found:
-            self.blueCode.append(p)
-            self.max_heap.remove(patient)
+            self.codeBlueList.append(p)
+            self.max_heap.remove(obj)
             heapify(self.max_heap)
         else:
             raise ValueError('Patient not found')
 
 
 # Example:
-er = ER(10, [
+er = ER(3, [
     Severity(1, 'White'),
     Severity(2, 'Green'),
     Severity(3, 'Yellow'),
